@@ -7,7 +7,7 @@ const deleteButton = document.querySelector("#delete-btn");
 let userText = null;
 // const API_KEY = "AIzaSyC4N3F__QxCraBC-zuDDApc9Yd0L4UfxzE"; 
 // const API_KEY = "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"; 
-const API_KEY = "AIzaSyC2ef5VgbJo8MtZDxgsUjOdsGq0Zc6zybw";
+const API_KEY = "AIzaSyC0rXNATm70Y5Qa1AFwY0s392oulxYwQMo";
 const loadDataFromLocalstorage = () => {
     // Load saved chats and theme from local storage and apply/add on the page
     const themeColor = localStorage.getItem("themeColor");
@@ -53,7 +53,8 @@ const getChatResponse = async (incomingChatDiv) => {
 
     try {
         const response = await (await fetch(API_URL, requestOptions)).json();
-        const result = response.candidates?.[0]?.content?.parts?.[0]?.text || "No response from Gemini.";
+        const result = response.candidates?.[0]?.content?.parts?.[0]?.text || "No response. Daily usage limit may be over. Please try again later.";
+
         const text = result.trim();
         let index = 0;
         const typingInterval = setInterval(() => {
@@ -63,7 +64,7 @@ const getChatResponse = async (incomingChatDiv) => {
             } else {
                 clearInterval(typingInterval);
             }
-        }, 10); 
+        }, 10);
 
     } catch (error) {
         console.error(error);
@@ -130,12 +131,27 @@ const handleOutgoingChat = () => {
 }
 
 deleteButton.addEventListener("click", () => {
-    // Remove the chats from local storage and call loadDataFromLocalstorage function
-    if (confirm("Are you sure you want to delete all the chats?")) {
-        localStorage.removeItem("all-chats");
-        loadDataFromLocalstorage();
-    }
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This will delete all your chat history!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.removeItem("all-chats");
+            loadDataFromLocalstorage();
+            Swal.fire(
+                "Deleted!",
+                "Your chat history has been deleted.",
+                "success"
+            );
+        }
+    });
 });
+
 
 themeButton.addEventListener("click", () => {
     // Toggle body's class for the theme mode and save the updated theme to the local storage 
