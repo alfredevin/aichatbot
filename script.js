@@ -114,7 +114,7 @@ const handleOutgoingChat = () => {
     chatInput.value = "";
     chatInput.style.height = `${initialInputHeight}px`;
 
-    const html = `<div class="chat-content" style="text-align:right;flex-end">
+    const html = `<div class="chat-content" >
                     <div class="chat-details">
                         <img src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2558760599.jpg" style="border-radius:50%;" alt="user-img">
                         <p>${userText}</p>
